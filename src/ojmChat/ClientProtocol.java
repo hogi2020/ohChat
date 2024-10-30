@@ -46,16 +46,18 @@ public class ClientProtocol implements Runnable {
             while((msg = (String) in.readObject()) != null) {
                 System.out.println("수신정보 | " + msg);
                 String[] strArray = msg.split("#", 2);
+                String protocol = strArray[0];
+                String content = strArray[1];
 
                 // 입력 스트림을 통한 RoomList 업데이트 진행
-                if (strArray[0].equals("MsgSend")) {
-                    cui.displayMsg(strArray[1]);
+                if (protocol.equals("MsgSend")) {
+                    cui.displayMsg(content);
 
-                } else if (strArray[0].equals("RoomList")) {
-                    cui.updateRoomList(strArray[1].split(","));
+                } else if (protocol.equals("RoomList")) {
+                    cui.updateRoomList(content.split(","));
 
-                } else if (strArray[0].equals("Join")) {
-                    cui.displayMsg(msg);
+                } else if (protocol.equals("Join")) {
+                    cui.displayMsg(content);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
