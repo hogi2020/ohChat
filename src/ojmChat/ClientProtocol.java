@@ -47,6 +47,10 @@ public class ClientProtocol implements Runnable {
                 String protocol = strArray[0];
                 String content = strArray[1];
 
+                if (protocol.equals("reset")) {
+                    cui.txt_field.setText("");
+                }
+
                 // 입력 스트림을 통한 RoomList 업데이트 진행
                 if (protocol.equals("MsgSend")) {
                     cui.displayMsg(content);
