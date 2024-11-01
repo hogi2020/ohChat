@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class ClientProtocol implements Runnable {
     // 클라이언트 소켓, 입출력 스트림 선언
     private Socket clientSocket = null;
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
-    String msg = null;
-
-    private ClientUI cui = null;
+    String msg;
+    ClientUI cui;
 
 
     // 생성자 생성

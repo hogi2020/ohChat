@@ -27,8 +27,10 @@ public class ClientUI extends JFrame implements ActionListener {
 
 
     // 생성자 생성
-    public ClientUI() {
+    public ClientUI() {}
+    public ClientUI(String id) {
         inDisplay();
+        this.setTitle("Client ID >>> " + id);
         op = new ClientProtocol(this);
     }
 
@@ -108,10 +110,5 @@ public class ClientUI extends JFrame implements ActionListener {
         for (String room : rooms) {
             listModel_room.addElement(room);
         }
-    }
-
-    // 메인 메소드
-    public static void main(String[] args) {
-        new ClientUI();
     }
 }
