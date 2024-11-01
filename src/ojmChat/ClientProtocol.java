@@ -24,7 +24,7 @@ public class ClientProtocol implements Runnable {
     // 서버 연결
     public void connectToServer() {
         try {
-            clientSocket = new Socket("localhost", 3000);
+            clientSocket = new Socket("192.168.0.36", 3000);
             in = new ObjectInputStream(clientSocket.getInputStream());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             System.out.println("Connect to Server.....");
@@ -47,8 +47,8 @@ public class ClientProtocol implements Runnable {
                 String protocol = strArray[0];
                 String content = strArray[1];
 
-                if (protocol.equals("reset")) {
-                    cui.txt_field.setText("");
+                if (protocol.equals("Reset")) {
+                    cui.txt_area.setText("");
                 }
 
                 // 입력 스트림을 통한 RoomList 업데이트 진행
