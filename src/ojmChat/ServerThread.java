@@ -57,7 +57,7 @@ public class ServerThread implements Runnable {
                         case "Create":      /// 그룹창 생성
                             sdm.createRoom(content);
                             break;
-                        case "Join":
+                        case "Enter":
                             sdm.ClientToRoom(outStream, content);
                             roomMsg = sdm.getRoomMsg(content);
                             roomMsg.addClient(outStream, content);

@@ -58,7 +58,7 @@ public class ClientProtocol implements Runnable {
                 } else if (protocol.equals("RoomList")) {
                     cui.updateRoomList(content.split(","));
 
-                } else if (protocol.equals("Join")) {
+                } else if (protocol.equals("Enter")) {
                     cui.displayMsg(content);
                 }
             }

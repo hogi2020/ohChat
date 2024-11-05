@@ -90,7 +90,7 @@ public class ClientUI extends JFrame implements ActionListener {
             String roomSelect = list_room.getSelectedValue();
             txt_area.setText("");
             if (roomSelect != null) {
-                cp.sendMsg("Join#" + roomSelect);
+                cp.sendMsg("Enter#" + roomSelect);
             } else {
                 // 동작 시, 확인 불가 알림
                 JOptionPane.showMessageDialog(this, "참여 가능한 그룹이 없습니다.");

@@ -1,9 +1,6 @@
 package ojmDB;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class DBConnection {
 
@@ -19,18 +16,17 @@ public class DBConnection {
     PreparedStatement pstmt;
     ResultSet rs;
 
+
     // 생성자 생성
     public DBConnection() {}
-
     // DBConnection 타입의 변수를 선언
     // DBConnection 클래스에 대한 싱글톤 패턴 구현
-    public static DBConnection getInstance() {
+    public DBConnection getInstance() {
         // if문의 조건절에서 null 체크함.
-        if(dbMgr == null) {
-            dbMgr = new DBConnection();
-        }
+        if(dbMgr == null) { dbMgr = new DBConnection(); }
         return dbMgr;
     }
+
 
     // Database 연동 메서드 생성
     public Connection getConnection() {
@@ -43,5 +39,30 @@ public class DBConnection {
             e.printStackTrace();
         }
         return conn;
+    }
+
+
+    public static void main(String[] args) throws SQLException {
+        DBConnection dbMgr = new DBConnection();
+        Connection conn = dbMgr.getConnection();
+
+        String sqlQuery = "select * from member";
+
+        try {
+            dbMgr.pstmt = conn.prepareStatement(sqlQuery);
+            dbMgr.rs = dbMgr.pstmt.executeQuery();
+
+            while (dbMgr.rs.next()) {
+               memDTO memdto = new memDTO(
+                       dbMgr.rs.getString("MEM_IP"),
+                       dbMgr.rs.getString("MEM_NICK"),
+                       dbMgr.rs.getInt("MEM_PW")
+               );
+
+               System.out.println(memdto.getMem_ip());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

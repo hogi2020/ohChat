@@ -46,6 +46,7 @@ public class ClientLoginUI extends JFrame implements ActionListener {
         btn_login.setBounds(175, 250, 100,30);
 
         // 윈도우 레이아웃 정의
+        this.setTitle("LogIn Page");
         this.setSize(350, 400);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -59,6 +60,8 @@ public class ClientLoginUI extends JFrame implements ActionListener {
         if (obj == btn_login) {
             new ClientUI(txt_f_id.getText());
             this.dispose();
+        } else if (obj == btn_join) {
+            new ClientJoinUI();
         }
     }
 
