@@ -29,11 +29,10 @@ public class ClientUI extends JFrame implements ActionListener {
 
     // 생성자 생성
     public ClientUI() {}
-    public ClientUI(String id) {
-        this.nickName = id;
+    public ClientUI(ClientLoginUI clogin) {
         inDisplay();
         this.setTitle("Client ID : " + nickName);
-        cp = new ClientProtocol(this);
+        this.cp = clogin.cp;
     }
 
 
@@ -63,7 +62,7 @@ public class ClientUI extends JFrame implements ActionListener {
         this.add(pnl_main);
 
         txt_field.requestFocusInWindow();
-        this.setVisible(true);
+        this.setVisible(false);
     }
 
 

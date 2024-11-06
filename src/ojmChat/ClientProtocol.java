@@ -11,12 +11,14 @@ public class ClientProtocol implements Runnable {
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
     String msg;
+    ClientLoginUI clogin;
+    ClientJoinUI cjoin;
     ClientUI cui;
 
 
     // 생성자 생성
-    public ClientProtocol(ClientUI cui) {
-        this.cui = cui;
+    public ClientProtocol(ClientLoginUI clogin) {
+        this.clogin = clogin;
         connectToServer();
     }
 

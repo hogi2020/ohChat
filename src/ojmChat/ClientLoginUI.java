@@ -6,6 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ClientLoginUI extends JFrame implements ActionListener {
+    // 선언부 | 클래스 선언
+    ClientUI cui;
+    ClientJoinUI cjoin;
+    ClientProtocol cp;
+
     // 선언부
     JLabel label_id = new JLabel("아이디");
     JLabel label_pw = new JLabel("패스워드");
@@ -17,6 +22,7 @@ public class ClientLoginUI extends JFrame implements ActionListener {
 
     // 생성자
     public ClientLoginUI() {
+        this.cp = new ClientProtocol(this);
         inDisplay();
     }
 
@@ -58,10 +64,11 @@ public class ClientLoginUI extends JFrame implements ActionListener {
         Object obj = e.getSource();
 
         if (obj == btn_login) {
-            new ClientUI(txt_f_id.getText());
+            cui.setVisible(true);
+            cui.setTitle(txt_f_id.getText());
             this.dispose();
         } else if (obj == btn_join) {
-            new ClientJoinUI();
+            cjoin.setVisible(true);
         }
     }
 

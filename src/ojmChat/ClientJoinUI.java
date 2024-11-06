@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ClientJoinUI extends JFrame implements ActionListener {
+    ClientProtocol cp = null;
+
     // 선언부
     JLabel label_id = new JLabel("ID Input");
     JLabel label_pw = new JLabel("PW Input");
@@ -13,10 +15,12 @@ public class ClientJoinUI extends JFrame implements ActionListener {
     JPasswordField txt_f_pw = new JPasswordField("12345");
     JPasswordField txt_f_pw_ch = new JPasswordField("12346");
     JButton btn_re_join = new JButton("Request Join");
+    JButton btn_upd_acc = new JButton("Update Account");
 
 
     // 생성자
-    public ClientJoinUI() {
+    public ClientJoinUI(ClientLoginUI clogin) {
+        this.cp = clogin.cp;
         inDisplay();
     }
 
@@ -44,13 +48,15 @@ public class ClientJoinUI extends JFrame implements ActionListener {
 
         // 버튼 추가
         this.add(btn_re_join);
-        btn_re_join.setBounds(90, 250, 150,30);
+        this.add(btn_upd_acc);
+        btn_re_join.setBounds(35, 270, 110,30);
+        btn_upd_acc.setBounds(165, 270, 130, 30);
 
         // 윈도우 레이아웃 정의
         this.setTitle("Join Page");
         this.setSize(350, 400);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setVisible(true);
+        this.setVisible(false);
     }
 
 
@@ -61,7 +67,11 @@ public class ClientJoinUI extends JFrame implements ActionListener {
         String pw_check = txt_f_pw_ch.getText();
 
         if (obj == btn_re_join && pw_origin.equals(pw_check)) {
-            System.out.println(pw_check);
+            System.out.println("insert");
+
+        } else if (obj == btn_upd_acc && pw_origin.equals(pw_check)) {
+            System.out.println("update");
+
         } else {
             JOptionPane.showMessageDialog(this, "비밀번호가 다릅니다.");
         }
