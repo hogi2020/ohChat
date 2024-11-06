@@ -2,10 +2,9 @@ package ojmDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MemDML {
+public class DBManager {
     DBConnection dbMgr = DBConnection.getInstance();
     Connection conn;
     PreparedStatement pstmt;
@@ -27,7 +26,7 @@ public class MemDML {
             pstmt.setString(3, mem_pw);
             tfNum = pstmt.executeUpdate();
 
-        } catch (SQLException e) { e.printStackTrace();
+        } catch (SQLException e) { this.tfNum = -1;
         } finally { dbMgr.freeConnection(conn, pstmt);} // 자원 명시적 종료
     }
 
@@ -52,8 +51,8 @@ public class MemDML {
 
     // UPDATE [테이블] SET [열] = '변경할값' WHERE [조건]
     // Database 데이터 수정 메서드
-    public void updateMem(String update_nick, String update_pw, String mem_nick, String mem_pw) {
-        sql = "update member set mem_nick = ?, mem_pw = ? where mem_nick = ? and mem_pw = ?";
+    public void updateMem(String mem_ip, String update_nick, String update_pw) {
+        sql = "update member set mem_nick = ? where mem_ip = ? and mem_pw = ?";
 
         try {
             conn = dbMgr.getConnection();
@@ -61,12 +60,16 @@ public class MemDML {
 
             // DB 내 데이터 삭제
             pstmt.setString(1, update_nick);
-            pstmt.setString(2, update_pw);
-            pstmt.setString(3, mem_nick);
-            pstmt.setString(4, mem_pw);
+            pstmt.setString(2, mem_ip);
+            pstmt.setString(3, update_pw);
             tfNum = pstmt.executeUpdate();
 
-        } catch (SQLException e) { e.printStackTrace();
+        } catch (SQLException e) { this.tfNum = -1;
         } finally { dbMgr.freeConnection(conn, pstmt);} // 자원 명시적 종료
+    }
+
+    // 결과 출력
+    public int result() {
+        return tfNum;
     }
 }

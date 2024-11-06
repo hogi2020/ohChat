@@ -9,7 +9,6 @@ public class ClientLoginUI extends JFrame implements ActionListener {
     // 선언부 | 클래스 선언
     ClientUI cui;
     ClientJoinUI cjoin;
-    ClientProtocol cp;
 
     // 선언부
     JLabel label_id = new JLabel("아이디");
@@ -22,7 +21,8 @@ public class ClientLoginUI extends JFrame implements ActionListener {
 
     // 생성자
     public ClientLoginUI() {
-        this.cp = new ClientProtocol(this);
+        cui = new ClientUI(this);
+        cjoin = new ClientJoinUI(cui);
         inDisplay();
     }
 

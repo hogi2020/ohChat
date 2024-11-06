@@ -1,5 +1,7 @@
 package ojmChat;
 
+import ojmDB.DBManager;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,13 +13,20 @@ public class ServerThread implements Runnable {
     ObjectOutputStream outStream;
     ObjectInputStream inStream;
     ServerDataMng sdm;
+    DBManager dbMgr;
+
+    // 선언부 | 클라이언트 정보 선언
+    String mem_ip;
+    String mem_nick;
+    String mem_pw;
 
 
     // 생성자 | 서버 소켓
     public ServerThread() {}
-    public ServerThread(Socket socket, ServerDataMng sdm) {
+    public ServerThread(Socket socket, ServerDataMng sdm, DBManager dbMgr) {
         this.clientSocket = socket;
         this.sdm = sdm;
+        this.dbMgr = dbMgr;
     }
 
 
@@ -64,6 +73,26 @@ public class ServerThread implements Runnable {
 
                             roomName = sdm.getRoomName(outStream);
                             roomMsg.broadcastMsg(roomName);
+                            break;
+                        case "Join":
+                            mem_ip = clientSocket.getInetAddress().getHostAddress();
+                            String[] insertStrings = content.split("/", 2);
+                            dbMgr.insertMem(mem_ip, insertStrings[0], insertStrings[1]);
+
+                            if (dbMgr.result() != 1) {
+                                outStream.writeObject("MsgSQL#가입된 IP주소 입니다!");
+                            } else {
+                                outStream.writeObject("MsgSQL#가입이 완료되었습니다.");
+                            }
+                            break;
+                        case "Update":
+                            mem_ip = clientSocket.getInetAddress().getHostAddress();
+                            String[] updateStrings = content.split("/", 2);
+                            dbMgr.updateMem(mem_ip, updateStrings[0], updateStrings[1]);
+
+                            if (dbMgr.result() == 1) {
+                                outStream.writeObject("MsgSQL#닉네임이 변경되었습니다.");
+                            }
                             break;
                     }
                 }

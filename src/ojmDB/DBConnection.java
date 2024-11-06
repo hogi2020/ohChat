@@ -20,7 +20,6 @@ public class DBConnection {
     // 생성자 생성
     public DBConnection() {}
 
-
     // DBConnection 타입의 변수를 선언
     // DBConnection 클래스에 대한 싱글톤 패턴 구현
     public static DBConnection getInstance() {

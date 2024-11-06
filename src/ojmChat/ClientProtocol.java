@@ -1,5 +1,6 @@
 package ojmChat;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,14 +12,12 @@ public class ClientProtocol implements Runnable {
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
     String msg;
-    ClientLoginUI clogin;
-    ClientJoinUI cjoin;
     ClientUI cui;
 
 
     // 생성자 생성
-    public ClientProtocol(ClientLoginUI clogin) {
-        this.clogin = clogin;
+    public ClientProtocol(ClientUI cui) {
+        this.cui = cui;
         connectToServer();
     }
 
@@ -62,6 +61,9 @@ public class ClientProtocol implements Runnable {
 
                 } else if (protocol.equals("Enter")) {
                     cui.displayMsg(content);
+
+                } else if (protocol.equals("MsgSQL")) {
+                    JOptionPane.showMessageDialog(cui.clogin.cjoin, content);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -74,7 +76,6 @@ public class ClientProtocol implements Runnable {
             }
         }
     }
-
 
 
     // 클라이언트-서버 출력스트림 메서드

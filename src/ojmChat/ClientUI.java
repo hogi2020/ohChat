@@ -7,7 +7,9 @@ import javax.swing.*;
 
 public class ClientUI extends JFrame implements ActionListener {
     // 프로토콜 객체 선언
-    ClientProtocol cp = null;
+    ClientProtocol cp = new ClientProtocol(this);
+    ClientLoginUI clogin;
+
     String nickName;
 
     // Display 레이아웃 구성
@@ -26,13 +28,12 @@ public class ClientUI extends JFrame implements ActionListener {
     JButton btn_create = new JButton("Add_Group+");
     JButton btn_join = new JButton("Join");
 
-
     // 생성자 생성
     public ClientUI() {}
     public ClientUI(ClientLoginUI clogin) {
+        this.clogin = clogin;
         inDisplay();
         this.setTitle("Client ID : " + nickName);
-        this.cp = clogin.cp;
     }
 
 

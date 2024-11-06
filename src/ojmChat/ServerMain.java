@@ -1,5 +1,7 @@
 package ojmChat;
 
+import ojmDB.DBManager;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,14 +10,13 @@ public class ServerMain {
     // 선언부
     Socket clientSocket;
     ServerDataMng sdm;
-    DBManager dbManager;
+    DBManager dbMgr;
 
 
     // 서버 실행 및 클라이언트 접속
     public void ServerStart() {
         // DBManager 초기화 및 연결
-        dbManager = new DBManager();
-        dbManager.connect();
+        dbMgr = new DBManager();
 
         try(ServerSocket ss = new ServerSocket(3000)) {
             System.out.println("Ready to Server..... | " + ss);
@@ -29,12 +30,10 @@ public class ServerMain {
                 System.out.println("클라이언트 접속 | " + clientSocket.getInetAddress());
 
                 // ServerThread 클래스의 run()스레드 생성
-                new Thread(new ServerThread(clientSocket, sdm)).start();
+                new Thread(new ServerThread(clientSocket, sdm, dbMgr)).start();
             }
         } catch (IOException e) {
             System.out.println("서버 작동 중 오류 발생: " + e.getMessage());
-        } finally {
-            dbManager.disconnect(); // 서버 종료 시 DB 연결 종료
         }
     }
 
