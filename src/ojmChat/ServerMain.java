@@ -1,6 +1,6 @@
 package ojmChat;
 
-import ojmDB.DBManager;
+import ojmDB.ProjectDAO;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -10,13 +10,13 @@ public class ServerMain {
     // 선언부
     Socket clientSocket;
     ServerDataMng sdm;
-    DBManager dbMgr;
+    ProjectDAO dbMgr;
 
 
     // 서버 실행 및 클라이언트 접속
     public void ServerStart() {
         // DBManager 초기화 및 연결
-        dbMgr = new DBManager();
+        dbMgr = new ProjectDAO();
 
         try(ServerSocket ss = new ServerSocket(3000)) {
             System.out.println("Ready to Server..... | " + ss);

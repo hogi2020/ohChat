@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DBManager {
-    DBConnection dbMgr = DBConnection.getInstance();
+public class ProjectDAO {
+    DBConnectionMgr dbMgr = DBConnectionMgr.getInstance();
     Connection conn;
     PreparedStatement pstmt;
     String sql = new String();

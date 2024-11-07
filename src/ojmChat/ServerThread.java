@@ -1,6 +1,6 @@
 package ojmChat;
 
-import ojmDB.DBManager;
+import ojmDB.ProjectDAO;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,7 +13,7 @@ public class ServerThread implements Runnable {
     ObjectOutputStream outStream;
     ObjectInputStream inStream;
     ServerDataMng sdm;
-    DBManager dbMgr;
+    ProjectDAO dbMgr;
 
     // 선언부 | 클라이언트 정보 선언
     String mem_ip;
@@ -23,7 +23,7 @@ public class ServerThread implements Runnable {
 
     // 생성자 | 서버 소켓
     public ServerThread() {}
-    public ServerThread(Socket socket, ServerDataMng sdm, DBManager dbMgr) {
+    public ServerThread(Socket socket, ServerDataMng sdm, ProjectDAO dbMgr) {
         this.clientSocket = socket;
         this.sdm = sdm;
         this.dbMgr = dbMgr;
