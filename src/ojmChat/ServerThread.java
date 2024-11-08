@@ -52,6 +52,7 @@ public class ServerThread implements Runnable {
 
                 String roomName;
                 ServerRoomMsg roomMsg;
+                mem_ip = clientSocket.getInetAddress().getHostAddress();
 
                 if (strArray.length == 2) {
                     // 프로토콜에 따른 서버 동작 실행
@@ -75,7 +76,6 @@ public class ServerThread implements Runnable {
                             roomMsg.broadcastMsg(roomName);
                             break;
                         case "Join":
-                            mem_ip = clientSocket.getInetAddress().getHostAddress();
                             String[] insertStrings = content.split("/", 2);
                             dbMgr.insertMem(mem_ip, insertStrings[0], insertStrings[1]);
 
@@ -86,7 +86,6 @@ public class ServerThread implements Runnable {
                             }
                             break;
                         case "Update":
-                            mem_ip = clientSocket.getInetAddress().getHostAddress();
                             String[] updateStrings = content.split("/", 2);
                             dbMgr.updateMem(mem_ip, updateStrings[0], updateStrings[1]);
 
@@ -94,6 +93,17 @@ public class ServerThread implements Runnable {
                                 outStream.writeObject("MsgSQL#닉네임이 변경되었습니다.");
                             }
                             break;
+                        case "Delete":
+                            String[] deleteStrings = content.split("/", 2);
+                            dbMgr.deleteMem(deleteStrings[0], deleteStrings[1]);
+
+                            if (dbMgr.result() == 1) {
+                                outStream.writeObject("MsgSQL#닉네임이 삭제되었습니다.");
+                            }
+                        case "LoginCheck":
+                            String[] loginStrings = content.split("/", 2);
+                            int result = dbMgr.loginCheck(loginStrings[0], Integer.parseInt(loginStrings[1]));
+                            outStream.writeObject("LoginCheck#" + result);
                     }
                 }
             }

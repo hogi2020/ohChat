@@ -64,9 +64,7 @@ public class ClientLoginUI extends JFrame implements ActionListener {
         Object obj = e.getSource();
 
         if (obj == btn_login) {
-            cui.setVisible(true);
-            cui.setTitle(txt_f_id.getText());
-            this.dispose();
+            cui.cp.sendMsg("LoginCheck#" + txt_f_id.getText() + "/" + txt_f_pw.getText());
         } else if (obj == btn_join) {
             cjoin.setVisible(true);
         }

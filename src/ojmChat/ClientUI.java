@@ -10,8 +10,6 @@ public class ClientUI extends JFrame implements ActionListener {
     ClientProtocol cp = new ClientProtocol(this);
     ClientLoginUI clogin;
 
-    String nickName;
-
     // Display 레이아웃 구성
     JPanel pnl_main = new JPanel(new BorderLayout());
     JPanel pnl_chat = new JPanel(new BorderLayout());
@@ -33,7 +31,6 @@ public class ClientUI extends JFrame implements ActionListener {
     public ClientUI(ClientLoginUI clogin) {
         this.clogin = clogin;
         inDisplay();
-        this.setTitle("Client ID : " + nickName);
     }
 
 
@@ -72,6 +69,7 @@ public class ClientUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         String outMsg = txt_field.getText();
+        String nickName = clogin.txt_f_id.getText();
 
         // 동작 시, 메세지 전송 (공란이 아닐 경우)
         if (!outMsg.isEmpty()) {
@@ -110,6 +108,17 @@ public class ClientUI extends JFrame implements ActionListener {
         listModel_room.clear();
         for (String room : rooms) {
             listModel_room.addElement(room);
+        }
+    }
+
+    // 로그인 성공 시, 메인창 출력
+    public void displayCUI(String content) {
+        if (content.equals("1")) {
+            setVisible(true);
+            setTitle("Client NickName : " +clogin.txt_f_id.getText());
+            clogin.dispose();
+        } else {
+            JOptionPane.showMessageDialog(clogin, "결과["+content+"] 일치하는 회원정보가 없습니다.");
         }
     }
 }

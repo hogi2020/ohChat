@@ -1,13 +1,12 @@
 package ojmDB;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ProjectDAO {
     DBConnectionMgr dbMgr = DBConnectionMgr.getInstance();
     Connection conn;
     PreparedStatement pstmt;
+    CallableStatement cstmt;
     String sql = new String();
     int tfNum = -1;     // 성공은 1, 실패는 0
 
@@ -68,8 +67,45 @@ public class ProjectDAO {
         } finally { dbMgr.freeConnection(conn, pstmt);} // 자원 명시적 종료
     }
 
+
     // 결과 출력
     public int result() {
         return tfNum;
+    }
+
+
+    // 로그인 정보 확인 메서드
+    public int loginCheck(String nickName, int pw) {
+        try {
+            // 1. 데이터베이스 연결
+            conn = dbMgr.getConnection();
+
+            // 2. CallableStatement 객체 생성 (프로시저 호출)
+            cstmt = conn.prepareCall("call CHAT_JOIN(?,?,?)");
+
+            // 3. 프로시저의 파라미터 설정
+            cstmt.setString(1, nickName);
+            cstmt.setInt(2, pw);
+            cstmt.registerOutParameter(3, Types.INTEGER);
+
+            // 4. 프로시저 실행
+            cstmt.execute();
+
+            // 5. 프로시저 결과 받기
+            tfNum = cstmt.getInt(3);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tfNum;
+    }
+
+
+    public static void main(String[] args) {
+        ProjectDAO pdao = new ProjectDAO();
+
+        int num = pdao.loginCheck("HOGI", 12345);
+        System.out.println(num);
     }
 }
