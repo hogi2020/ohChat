@@ -46,13 +46,19 @@ public class ServerThread implements Runnable {
             while (true) {
                 String msg = (String) inStream.readObject();
                 System.out.println("스레드 동작 | " + msg);
+
+                // 프로토콜 & 컨텐츠 분리
                 String[] strArray = msg.split("#", 2);
                 String command = strArray[0];
                 String content = strArray[1];
 
+                // 클라이언트 ip & pw 정보 전처리
+                mem_ip = clientSocket.getInetAddress().getHostAddress();
+                String[] Strings;
+
+                // 선언부
                 String roomName;
                 ServerRoomMsg roomMsg;
-                mem_ip = clientSocket.getInetAddress().getHostAddress();
 
                 if (strArray.length == 2) {
                     // 프로토콜에 따른 서버 동작 실행
@@ -64,10 +70,17 @@ public class ServerThread implements Runnable {
                             roomMsg.broadcastMsg(roomName);
                             // outStream.writeObject("MsgSend#" + content);
                             break;
+
                         case "Create":      /// 그룹창 생성
                             sdm.createRoom(content);
+
+                            // database 활용
+
+
+
                             break;
-                        case "Enter":
+
+                        case "Enter":       /// 그룹창 입장
                             sdm.ClientToRoom(outStream, content);
                             roomMsg = sdm.getRoomMsg(content);
                             roomMsg.addClient(outStream, content);
@@ -75,9 +88,10 @@ public class ServerThread implements Runnable {
                             roomName = sdm.getRoomName(outStream);
                             roomMsg.broadcastMsg(roomName);
                             break;
+
                         case "Join":
-                            String[] insertStrings = content.split("/", 2);
-                            dbMgr.insertMem(mem_ip, insertStrings[0], insertStrings[1]);
+                            Strings = content.split("/", 2);
+                            dbMgr.insertMem(mem_ip, Strings[0], Strings[1]);
 
                             if (dbMgr.result() != 1) {
                                 outStream.writeObject("MsgSQL#가입된 IP주소 입니다!");
@@ -85,25 +99,24 @@ public class ServerThread implements Runnable {
                                 outStream.writeObject("MsgSQL#가입이 완료되었습니다.");
                             }
                             break;
+
                         case "Update":
-                            String[] updateStrings = content.split("/", 2);
-                            dbMgr.updateMem(mem_ip, updateStrings[0], updateStrings[1]);
-
-                            if (dbMgr.result() == 1) {
-                                outStream.writeObject("MsgSQL#닉네임이 변경되었습니다.");
-                            }
+                            Strings = content.split("/", 2);
+                            dbMgr.updateMem(mem_ip, Strings[0], Strings[1]);
+                            if (dbMgr.result() == 1) { outStream.writeObject("MsgSQL#닉네임이 변경되었습니다.");}
                             break;
-                        case "Delete":
-                            String[] deleteStrings = content.split("/", 2);
-                            dbMgr.deleteMem(deleteStrings[0], deleteStrings[1]);
 
-                            if (dbMgr.result() == 1) {
-                                outStream.writeObject("MsgSQL#닉네임이 삭제되었습니다.");
-                            }
+                        case "Delete":
+                            Strings = content.split("/", 2);
+                            dbMgr.deleteMem(Strings[0], Strings[1]);
+                            if (dbMgr.result() == 1) { outStream.writeObject("MsgSQL#닉네임이 삭제되었습니다.");}
+                            break;
+
                         case "LoginCheck":
-                            String[] loginStrings = content.split("/", 2);
-                            int result = dbMgr.loginCheck(loginStrings[0], Integer.parseInt(loginStrings[1]));
+                            Strings = content.split("/", 2);
+                            int result = dbMgr.loginCheck(Strings[0], Integer.parseInt(Strings[1]));
                             outStream.writeObject("LoginCheck#" + result);
+                            break;
                     }
                 }
             }

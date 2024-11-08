@@ -88,10 +88,8 @@ public class ProjectDAO {
             cstmt.setInt(2, pw);
             cstmt.registerOutParameter(3, Types.INTEGER);
 
-            // 4. 프로시저 실행
+            // 4. 프로시저 실행 & 프로시저 결과 받기
             cstmt.execute();
-
-            // 5. 프로시저 결과 받기
             tfNum = cstmt.getInt(3);
 
         } catch (SQLException e) {
@@ -102,10 +100,5 @@ public class ProjectDAO {
     }
 
 
-    public static void main(String[] args) {
-        ProjectDAO pdao = new ProjectDAO();
 
-        int num = pdao.loginCheck("HOGI", 12345);
-        System.out.println(num);
-    }
 }
