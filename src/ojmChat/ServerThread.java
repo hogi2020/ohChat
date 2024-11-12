@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerThread implements Runnable {
     // 선언부
@@ -54,7 +55,7 @@ public class ServerThread implements Runnable {
 
                 // 클라이언트 ip & pw 정보 전처리
                 mem_ip = clientSocket.getInetAddress().getHostAddress();
-                String[] Strings;
+                String[] strings;
 
                 // 선언부
                 String roomName;
@@ -74,24 +75,32 @@ public class ServerThread implements Runnable {
                         case "Create":      /// 그룹창 생성
                             sdm.createRoom(content);
 
-                            // database 활용
+                            // 그룹 생성 및 중복 검사
+                            if (dbMgr.insertGroup(content) == 0) {
+                                outStream.writeObject("MsgGroup#동일한 그룹이 이미 존재합니다.");
+                            } else {
+                                ConcurrentHashMap<String, String> memMap = dbMgr.getMemMap();
 
-
-
+                            }
                             break;
 
                         case "Enter":       /// 그룹창 입장
-                            sdm.ClientToRoom(outStream, content);
-                            roomMsg = sdm.getRoomMsg(content);
-                            roomMsg.addClient(outStream, content);
+                            strings = content.split("/", 2);
+
+                            sdm.ClientToRoom(outStream, strings[1]);
+                            roomMsg = sdm.getRoomMsg(strings[1]);
+                            roomMsg.addClient(outStream, strings[1]);
 
                             roomName = sdm.getRoomName(outStream);
                             roomMsg.broadcastMsg(roomName);
+
+                            // 그룹 입장 선언
+                            dbMgr.joinGroup(strings[0], strings[1]);
                             break;
 
                         case "Join":
-                            Strings = content.split("/", 2);
-                            dbMgr.insertMem(mem_ip, Strings[0], Strings[1]);
+                            strings = content.split("/", 2);
+                            dbMgr.insertMem(mem_ip, strings[0], strings[1]);
 
                             if (dbMgr.result() != 1) {
                                 outStream.writeObject("MsgSQL#가입된 IP주소 입니다!");
@@ -101,20 +110,20 @@ public class ServerThread implements Runnable {
                             break;
 
                         case "Update":
-                            Strings = content.split("/", 2);
-                            dbMgr.updateMem(mem_ip, Strings[0], Strings[1]);
+                            strings = content.split("/", 2);
+                            dbMgr.updateMem(mem_ip, strings[0], strings[1]);
                             if (dbMgr.result() == 1) { outStream.writeObject("MsgSQL#닉네임이 변경되었습니다.");}
                             break;
 
                         case "Delete":
-                            Strings = content.split("/", 2);
-                            dbMgr.deleteMem(Strings[0], Strings[1]);
+                            strings = content.split("/", 2);
+                            dbMgr.deleteMem(strings[0], strings[1]);
                             if (dbMgr.result() == 1) { outStream.writeObject("MsgSQL#닉네임이 삭제되었습니다.");}
                             break;
 
                         case "LoginCheck":
-                            Strings = content.split("/", 2);
-                            int result = dbMgr.loginCheck(Strings[0], Integer.parseInt(Strings[1]));
+                            strings = content.split("/", 2);
+                            int result = dbMgr.loginCheck(strings[0], Integer.parseInt(strings[1]));
                             outStream.writeObject("LoginCheck#" + result);
                             break;
                     }

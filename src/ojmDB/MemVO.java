@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class MemDTO {
+public class MemVO {
     // 선언부
     private String mem_ip;
     private String mem_nick;

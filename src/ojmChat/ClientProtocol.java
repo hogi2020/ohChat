@@ -67,6 +67,8 @@ public class ClientProtocol implements Runnable {
 
                 } else if (protocol.equals("LoginCheck")) {
                     cui.displayCUI(content);
+                } else if (protocol.equals("MsgGroup")) {
+                    JOptionPane.showMessageDialog(cui, content);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
