@@ -17,7 +17,7 @@ public class ServerDataMng {
 
 
     ProjectDAO dbMgr = null;
-    ConcurrentHashMap<String, CopyOnWriteArrayList<ObjectOutputStream>> roomJoinMap;    // RoomName, ClientList
+    ConcurrentHashMap<String, CopyOnWriteArrayList<ObjectOutputStream>> roomMsgMap;    // RoomName, ClientList
     ConcurrentHashMap<String, ObjectOutputStream> clientInfoMap;    // nickName, OutputStream
     ConcurrentHashMap<String, String> roomMap;          // Roomid, RoomName
 
@@ -29,7 +29,7 @@ public class ServerDataMng {
 
         // 인스턴스화
         this.dbMgr = dbMgr;
-        roomJoinMap = new ConcurrentHashMap<>();
+        roomMsgMap = new ConcurrentHashMap<>();
         clientInfoMap = new ConcurrentHashMap<>();
     }
 
@@ -68,36 +68,17 @@ public class ServerDataMng {
                 System.out.println("DataMng-enterRoom 에러 발생 | " + e.getMessage());
             }
         }
-
     }
 
-
-    /// /// Map 관련 메서드 집합 /// ///
-//    // ClientRoomMap에 ClientOutStream 추가
-//    public void ClientToRoom(ObjectOutputStream clientOutStream, String roomName) {
-//        clientRoomMap.put(clientOutStream, roomName);
-//    }
-
-
-
-//    // 그룹창 생성 메서드
-//    public void createRoom(String roomName) {
-//
-//        if (!chatRoomMap.containsKey(roomName)) {
-//            chatRoomMap.put(roomName, new ServerRoomMsg(roomName));
-//
-//            broadcastRoomList();
-//        }
-//    }
-
-
-    // Client RoomName 호출
-    public String getRoomName(ObjectOutputStream outStream) {
-        return clientRoomMap.get(outStream);
+    public void broadcastMsg(String roomName) {
+        for (ObjectOutputStream outStream : clientRoomMap.keySet()) {
+            try {
+                outStream.writeObject("Reset#");
+                outStream.writeObject("MsgSend#>>["+roomName+"]에 입장하였습니다.");
+            } catch (IOException e) {
+                System.out.println("DataMng-broadcastMsg 에러 발생 | " + e.getMessage());
+            }
+        }
     }
 
-    // RoomMsg 호출
-    public ServerRoomMsg getRoomMsg(String roomName) {
-        return chatRoomMap.computeIfAbsent(roomName, k -> new ServerRoomMsg(roomName));
-    }
 }

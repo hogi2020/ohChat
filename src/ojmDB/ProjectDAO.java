@@ -148,17 +148,17 @@ public class ProjectDAO {
     }
 
 
-     public void insertMsg(String msg, String mem_ip, String talk_room_id) {
-         sql = "insert into message values (seq_msg_no.nextval, ?, ?, ?, ?)";
+     public void insertMsg(String msg, String mem_ip, String roomName) {
+         sql = "insert into message values (seq_msg_no.nextval, ?, to_char(SYSDATE, 'yyyy-mm-dd hh24:mi'), " +
+                 "?, (select talk_room_id from talk_room where talk_room_name = ?))";
 
          try {
              conn = dbMgr.getConnection();
              pstmt = conn.prepareStatement(sql);
 
              pstmt.setString(1, msg);   // msg
-             pstmt.setString(2, msg);   // datetime
-             pstmt.setString(3, msg);   // mem_ip
-             pstmt.setString(4, msg);   // talk_room_id
+             pstmt.setString(2, mem_ip);   // mem_ip
+             pstmt.setString(3, roomName);   // talk_room_id
 
              tfNum = pstmt.executeUpdate();
 
