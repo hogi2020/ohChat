@@ -80,7 +80,7 @@ public class ClientUI extends JFrame implements ActionListener {
         } else if (obj == btn_create) {
             String roomName = JOptionPane.showInputDialog(this, "그룹명을 입력해주세요!");
             if (roomName != null && !roomName.isEmpty()) {
-                cp.sendMsg("Create#" + roomName + "/" + nickName);    // 그룹창 생성
+                cp.sendMsg("Create#" + roomName);    // 그룹창 생성
             }
 
             // 동작 시, 선택한 그룹창에 입장합니다.
@@ -88,7 +88,7 @@ public class ClientUI extends JFrame implements ActionListener {
             String roomSelect = list_room.getSelectedValue();
             txt_area.setText("");
             if (roomSelect != null) {
-                cp.sendMsg("Enter#" + roomSelect);
+                cp.sendMsg("Enter#" + roomSelect + "/" + nickName);
             } else {
                 // 동작 시, 확인 불가 알림
                 JOptionPane.showMessageDialog(this, "참여 가능한 그룹이 없습니다.");

@@ -3,6 +3,7 @@ package ojmDB;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProjectDAO {
     DBConnectionMgr dbMgr = DBConnectionMgr.getInstance();
@@ -118,8 +119,7 @@ public class ProjectDAO {
     public int insertGroup(String group_name) {
         String[] sqls = {
                 "select count(*) from talk_room where talk_room_name = ?",
-                "insert into talk_room values (talk_room_seq.nextval,?)"
-        };
+                "insert into talk_room values (talk_room_seq.nextval,?)"};
 
         try {
             conn = dbMgr.getConnection();
@@ -146,6 +146,28 @@ public class ProjectDAO {
         }
         return tfNum;
     }
+
+
+     public void insertMsg(String msg, String mem_ip, String talk_room_id) {
+         sql = "insert into message values (seq_msg_no.nextval, ?, ?, ?, ?)";
+
+         try {
+             conn = dbMgr.getConnection();
+             pstmt = conn.prepareStatement(sql);
+
+             pstmt.setString(1, msg);   // msg
+             pstmt.setString(2, msg);   // datetime
+             pstmt.setString(3, msg);   // mem_ip
+             pstmt.setString(4, msg);   // talk_room_id
+
+             tfNum = pstmt.executeUpdate();
+
+         } catch (SQLException e) {
+             this.tfNum = -1;
+         } finally {
+             dbMgr.freeConnection(conn, pstmt);
+         }
+     }
 
 
     // 클라이언트 그룹창 입장
@@ -210,21 +232,48 @@ public class ProjectDAO {
 
 
     // MemMap 데이터 Input
-    public ConcurrentHashMap<String, String> getRoomMemMap() {
-        ConcurrentHashMap<String, String> roomMemMap = new ConcurrentHashMap<>();
-        sql = "select * from room_menmber";
+    public CopyOnWriteArrayList<String> getJoinMemList(String roomName) {
 
+        CopyOnWriteArrayList<String> joinMemList = new CopyOnWriteArrayList<>();
+        sql = "select mem_nick from room_member rm " +
+                "join talk_room tr on rm.talk_room_id = tr.talk_room_id " +
+                "join member mem on rm.mem_ip = mem.mem_ip " +
+                "where tr.talk_room_name = ?";
         try {
             conn = dbMgr.getConnection();
             pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, roomName);
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                roomMemMap.put(rs.getString("mem_ip"), rs.getString("talk_room_id"));
+                joinMemList.add(rs.getString("mem_nick"));
             }
         } catch (SQLException e) { e.printStackTrace();
         } finally { dbMgr.freeConnection(conn, pstmt, rs);}
-        return roomMemMap;
+
+        return joinMemList;
+    }
+
+
+    // DB 메세지 호출하기
+    public CopyOnWriteArrayList<String> getMsgList(String roomName) {
+        CopyOnWriteArrayList<String> msgList = new CopyOnWriteArrayList<>();
+
+        sql = "select mg.msg from message mg " +
+                "join talk_room tr on mg.talk_room_id = tr.talk_room_id " +
+                "where tr.talk_room_name = ?";
+        try {
+            conn = dbMgr.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, roomName);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                msgList.add(rs.getString("msg"));
+            }
+        } catch (SQLException e) { e.printStackTrace();
+        } finally { dbMgr.freeConnection(conn, pstmt, rs);}
+        return msgList;
     }
 
 }
