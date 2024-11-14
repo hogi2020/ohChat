@@ -1,0 +1,154 @@
+@startuml
+class ojmChat.ClientLoginUI {
+~ ClientUI cui
+~ ClientJoinUI cjoin
+~ JLabel label_id
+~ JLabel label_pw
+~ JTextField txt_f_id
+~ JPasswordField txt_f_pw
+~ JButton btn_login
+~ JButton btn_join
++ void inDisplay()
++ void actionPerformed(ActionEvent)
++ {static} void main(String[])
+}
+
+
+class ojmChat.ServerThread {
+~ Socket clientSocket
+~ ObjectOutputStream outStream
+~ ObjectInputStream inStream
+~ ServerDataMng sdm
+~ ProjectDAO dbMgr
+~ String mem_ip
+~ String roomName
+~ String nickName
+~ String[] strings
+~ int loginTF
++ void run()
+}
+
+
+class ojmDB.ProjectDAO {
+~ DBConnectionMgr dbMgr
+~ Connection conn
+~ PreparedStatement pstmt
+~ CallableStatement cstmt
+~ ResultSet rs
+~ String sql
+~ String mem_ip
+~ int tfNum
++ void insertMem(String,String,String)
++ void deleteMem(String,String)
++ void updateMem(String,String,String)
++ int result()
++ int loginCheck(String,int)
++ int insertGroup(String)
++ void insertMsg(String,String,String)
++ void joinGroup(String,String)
++ ConcurrentHashMap<String,String> getRoomMap()
++ ConcurrentHashMap<String,String> getMemMap()
++ CopyOnWriteArrayList<String> getJoinMemList(String)
++ CopyOnWriteArrayList<String> getMsgList(String)
++ String getIP(String)
+}
+
+
+class ojmChat.ClientProtocol {
+- Socket clientSocket
+- ObjectInputStream in
+- ObjectOutputStream out
+~ String msg
+~ ClientUI cui
++ void connectToServer()
++ void run()
++ void sendMsg(String)
+}
+
+
+class ojmChat.ServerMain {
+~ Socket clientSocket
+~ ServerDataMng sdm
+~ ProjectDAO dbMgr
++ void ServerStart()
++ {static} void main(String[])
+}
+
+
+class ojmChat.ClientJoinUI {
+~ ClientProtocol cp
+~ JLabel label_id
+~ JLabel label_pw
+~ JLabel label_pw_ch
+~ JTextField txt_f_id
+~ JPasswordField txt_f_pw
+~ JPasswordField txt_f_pw_ch
+~ JButton btn_re_join
+~ JButton btn_upd_nick
+~ JButton btn_del_nick
++ void inDisplay()
++ void actionPerformed(ActionEvent)
+}
+
+
+class ojmChat.ServerDataMng {
+~ ProjectDAO dbMgr
+~ ConcurrentHashMap<String,CopyOnWriteArrayList<ObjectOutputStream>> roomMsgMap
+~ ConcurrentHashMap<String,ObjectOutputStream> clientInfoMap
+~ ConcurrentHashMap<String,String> roomMap
++ void broadcastRoomList()
++ void enterRoom(String,String)
++ void broadcastMsg(String,String,String)
+}
+
+
+class ojmDB.DBConnectionMgr {
++ String _DRIVER
++ String _URL
++ String _USER
++ String _PW
+~ {static} DBConnectionMgr dbMgr
+~ Connection conn
+~ PreparedStatement pstmt
+~ ResultSet rs
++ {static} DBConnectionMgr getInstance()
++ Connection getConnection()
++ void freeConnection(Connection,PreparedStatement,ResultSet)
++ void freeConnection(Connection,PreparedStatement)
+}
+
+
+class ojmChat.ClientUI {
+~ ClientProtocol cp
+~ ClientLoginUI clogin
+~ JPanel pnl_main
+~ JPanel pnl_chat
+~ JPanel pnl_room
+~ DefaultListModel<String> listModel_room
+~ JList<String> list_room
+~ JScrollPane scroll_list
+~ JTextField txt_field
+~ JTextArea txt_area
+~ JScrollPane scroll_area
+~ JPanel pnl_btn
+~ JButton btn_create
+~ JButton btn_join
++ void inDisplay()
++ void actionPerformed(ActionEvent)
++ void displayMsg(String)
++ void updateRoomList(String[])
++ void displayCUI(String)
+}
+
+
+
+
+java.awt.event.ActionListener <|.. ojmChat.ClientLoginUI
+ojmChat.JFrame <|-- ojmChat.ClientLoginUI
+ojmChat.Runnable <|.. ojmChat.ServerThread
+ojmChat.Runnable <|.. ojmChat.ClientProtocol
+java.awt.event.ActionListener <|.. ojmChat.ClientJoinUI
+ojmChat.JFrame <|-- ojmChat.ClientJoinUI
+java.awt.event.ActionListener <|.. ojmChat.ClientUI
+ojmChat.JFrame <|-- ojmChat.ClientUI
+@enduml

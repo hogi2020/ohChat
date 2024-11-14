@@ -260,11 +260,11 @@ public class ProjectDAO {
     public CopyOnWriteArrayList<String> getMsgList(String roomName) {
         CopyOnWriteArrayList<String> msgList = new CopyOnWriteArrayList<>();
 
-        sql = "select /*+ INDEX(mg idx_message_date_time_msg_id) */ mg.msg " +
-                "from message mg " +
-                "join talk_room tr on mg.talk_room_id = tr.talk_room_id " +
-                "where tr.talk_room_name = ? " +
-                "ORDER BY mg.date_time, mg.msg_id";
+        sql = "select /*+ INDEX(mg idx_message_date_time_msg_id) */ mg.msg \" +\n" +
+                "                \"from message mg \" +\n" +
+                "                \"join talk_room tr on mg.talk_room_id = tr.talk_room_id \" +\n" +
+                "                \"where tr.talk_room_name = ? \" +\n" +
+                "                \"ORDER BY mg.date_time, mg.msg_id";
 
         try {
             conn = dbMgr.getConnection();
