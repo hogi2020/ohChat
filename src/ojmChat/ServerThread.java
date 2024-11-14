@@ -17,7 +17,9 @@ public class ServerThread implements Runnable {
     ProjectDAO dbMgr;
     String mem_ip;
     String roomName;
+    String nickName;
     String[] strings;
+    int loginTF;
 
 
     // 생성자 | 서버 소켓
@@ -26,7 +28,6 @@ public class ServerThread implements Runnable {
         this.clientSocket = socket;
         this.sdm = sdm;
         this.dbMgr = dbMgr;
-        mem_ip = clientSocket.getInetAddress().getHostAddress();
     }
 
 
@@ -38,8 +39,6 @@ public class ServerThread implements Runnable {
             inStream = new ObjectInputStream(clientSocket.getInputStream());
             System.out.println("입출력 Stream 객체 생성 | " + clientSocket);
 
-            // RoomList 초기 호출
-            sdm.broadcastRoomList();
 
             // 스레드 동작 처리
             while (true) {
@@ -55,19 +54,7 @@ public class ServerThread implements Runnable {
                 // 프로토콜에 따른 서버 동작 실행
                 switch(command) {
                     case "MsgSend":     /// 메세지 발송
-                        dbMgr.insertMsg(content, mem_ip, roomName); // 메세지 저장
-                        CopyOnWriteArrayList<String> joinMemList = dbMgr.getJoinMemList(roomName);  // 그룹에 입장한 회원리스트
-                        CopyOnWriteArrayList<String> msgList = dbMgr.getMsgList(roomName);          // 그룹에 저장된 메세지리스트
-
-                        try {
-                            for (String nick : joinMemList) {
-                                for (String cmsg : msgList) {
-                                    sdm.clientInfoMap.get(nick).writeObject(cmsg);
-                                }
-                            }
-                        } catch (IOException e) {
-                            System.out.println("DataMng-MsgSend 에러 발생 | " + e.getMessage());
-                        }
+                        sdm.broadcastMsg(content, mem_ip, roomName);
                         break;
 
                     case "Create":      /// 그룹창 생성
@@ -75,8 +62,10 @@ public class ServerThread implements Runnable {
                         if (dbMgr.insertGroup(content) == 0) {
                             outStream.writeObject("MsgGroup#동일한 그룹이 이미 존재합니다.");
                         } else {
-                            // Map을 통해 각 그룹에 대한 클라이언트 리스트 생성
+                            // Map을 통해 각 그룹에 대한 메세지 리스트 생성
                             sdm.roomMsgMap.put(content, new CopyOnWriteArrayList<>());
+                            dbMgr.joinGroup(nickName, content);
+                            dbMgr.insertMsg(">>["+ content +"]에 입장하였습니다.", mem_ip, content);
                             sdm.broadcastRoomList();
                         }
                         break;
@@ -89,6 +78,7 @@ public class ServerThread implements Runnable {
 
                     case "Join":
                         strings = content.split("/", 2);
+                        mem_ip = clientSocket.getInetAddress().getHostAddress();
                         dbMgr.insertMem(mem_ip, strings[0], strings[1]);
 
                         if (dbMgr.result() != 1) {
@@ -112,11 +102,16 @@ public class ServerThread implements Runnable {
 
                     case "LoginCheck":
                         strings = content.split("/", 2);
-                        int result = dbMgr.loginCheck(strings[0], Integer.parseInt(strings[1]));
-                        outStream.writeObject("LoginCheck#" + result);
+                        loginTF = dbMgr.loginCheck(strings[0], Integer.parseInt(strings[1]));
+                        nickName = strings[0];
+                        mem_ip = dbMgr.getIP(strings[0]);
+                        outStream.writeObject("LoginCheck#" + loginTF);
 
                         // 로그인에 성공하면 ClientList에 Outstream 추가
-                        if (result == 1) sdm.clientInfoMap.put(strings[0], outStream);
+                        if (loginTF == 1) {
+                            sdm.clientInfoMap.put(strings[0], outStream);
+                            sdm.broadcastRoomList();
+                        }
                         break;
                 }
             }

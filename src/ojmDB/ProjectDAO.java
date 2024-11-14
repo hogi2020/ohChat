@@ -11,7 +11,8 @@ public class ProjectDAO {
     PreparedStatement pstmt;
     CallableStatement cstmt;
     ResultSet rs;
-    String sql = new String();
+    String sql;
+    String mem_ip;
     int tfNum = -1;     // 성공은 1, 실패는 0
 
 
@@ -159,11 +160,11 @@ public class ProjectDAO {
              pstmt.setString(1, msg);   // msg
              pstmt.setString(2, mem_ip);   // mem_ip
              pstmt.setString(3, roomName);   // talk_room_id
-
              tfNum = pstmt.executeUpdate();
 
          } catch (SQLException e) {
              this.tfNum = -1;
+             System.out.println("동작 중 오류 발생 | " + e.getMessage());
          } finally {
              dbMgr.freeConnection(conn, pstmt);
          }
@@ -276,4 +277,21 @@ public class ProjectDAO {
         return msgList;
     }
 
+    // NickName을 통해 IP주소 구하기
+    public String getIP(String nickName) {
+        sql = "select mem_ip from member where mem_nick = ?";
+
+        try {
+            conn = dbMgr.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, nickName);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                mem_ip = rs.getString("mem_ip");
+            }
+        } catch (SQLException e) { e.printStackTrace();
+        } finally { dbMgr.freeConnection(conn, pstmt, rs);}
+
+        return mem_ip;
+    }
 }

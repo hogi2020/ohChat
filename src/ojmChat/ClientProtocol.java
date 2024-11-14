@@ -25,7 +25,7 @@ public class ClientProtocol implements Runnable {
     // 서버 연결
     public void connectToServer() {
         try {
-            clientSocket = new Socket("localhost", 3000);
+            clientSocket = new Socket("192.168.0.36", 3000);
             in = new ObjectInputStream(clientSocket.getInputStream());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             System.out.println("Connect to Server.....");
@@ -51,7 +51,6 @@ public class ClientProtocol implements Runnable {
                 if (protocol.equals("Reset")) {
                     cui.txt_area.setText("");
                 }
-
                 // 입력 스트림을 통한 RoomList 업데이트 진행
                 if (protocol.equals("MsgSend")) {
                     cui.displayMsg(content);
@@ -64,6 +63,10 @@ public class ClientProtocol implements Runnable {
 
                 } else if (protocol.equals("MsgSQL")) {
                     JOptionPane.showMessageDialog(cui.clogin.cjoin, content);
+
+                    if(content.equals("가입이 완료되었습니다.")) {
+                        cui.clogin.setVisible(false);
+                    }
 
                 } else if (protocol.equals("LoginCheck")) {
                     cui.displayCUI(content);

@@ -13,8 +13,8 @@ public class ClientLoginUI extends JFrame implements ActionListener {
     // 선언부
     JLabel label_id = new JLabel("아이디");
     JLabel label_pw = new JLabel("패스워드");
-    JTextField txt_f_id = new JTextField("hogi");
-    JPasswordField txt_f_pw = new JPasswordField("12345");
+    JTextField txt_f_id = new JTextField("admin");
+    JPasswordField txt_f_pw = new JPasswordField("123456789");
     JButton btn_login = new JButton("로그인");
     JButton btn_join = new JButton("회원가입");
 

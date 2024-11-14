@@ -24,7 +24,7 @@ public class ClientUI extends JFrame implements ActionListener {
 
     JPanel pnl_btn = new JPanel();
     JButton btn_create = new JButton("Add_Group+");
-    JButton btn_join = new JButton("Join");
+    JButton btn_join = new JButton("Enter");
 
     // 생성자 생성
     public ClientUI() {}
