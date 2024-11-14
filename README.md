@@ -53,3 +53,7 @@ Java Swing을 이용한 멀티룸 채팅 애플리케이션입니다.
 - 실시간 채팅방 목록 업데이트
 - 채팅 기록 데이터베이스 저장 및 호출
 - 심플한 GUI 인터페이스
+
+## UML Image
+![diagram-6430462117493576377](https://github.com/user-attachments/assets/cf3bdadc-b944-4a8e-8ebe-18f098647d03)
+
