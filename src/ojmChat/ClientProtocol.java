@@ -25,7 +25,7 @@ public class ClientProtocol implements Runnable {
     // 서버 연결
     public void connectToServer() {
         try {
-            clientSocket = new Socket("192.168.0.36", 3000);
+            clientSocket = new Socket("localhost", 3000);
             in = new ObjectInputStream(clientSocket.getInputStream());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             System.out.println("Connect to Server.....");
@@ -65,7 +65,7 @@ public class ClientProtocol implements Runnable {
                     JOptionPane.showMessageDialog(cui.clogin.cjoin, content);
 
                     if(content.equals("가입이 완료되었습니다.")) {
-                        cui.clogin.setVisible(false);
+                        cui.clogin.cjoin.setVisible(false);
                     }
 
                 } else if (protocol.equals("LoginCheck")) {

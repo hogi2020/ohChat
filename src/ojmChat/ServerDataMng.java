@@ -54,7 +54,6 @@ public class ServerDataMng {
             if (joinMemList.contains(nick)) {
                 try {
                     clientInfoMap.get(nick).writeObject("Reset#");
-                    System.out.println("nickOutstreamInfo | " + clientInfoMap.get(nick));
 
                     for (String msg : msgList) {
                         clientInfoMap.get(nick).writeObject("MsgSend#" + msg);
@@ -72,12 +71,6 @@ public class ServerDataMng {
         dbMgr.insertMsg(msg, mem_ip, roomName); // 메세지 저장
         CopyOnWriteArrayList<String> joinMemList = dbMgr.getJoinMemList(roomName);  // 그룹에 입장한 회원리스트
         CopyOnWriteArrayList<String> msgList = dbMgr.getMsgList(roomName);          // 그룹에 저장된 메세지리스트
-
-//        System.out.println("content | " + content);
-//        System.out.println("mem_ip | " + mem_ip);
-//        System.out.println("roomName | " + roomName);
-//        System.out.println("joinMemList | " + joinMemList);
-//        System.out.println("msgList | " + msgList);
 
         for (String nick : clientInfoMap.keySet()) {
             if (joinMemList.contains(nick)) {
