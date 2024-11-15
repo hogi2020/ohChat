@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerMain {
-    // 선언부
+    // 선언부 |
     Socket clientSocket;
     ServerDataMng sdm;
     ProjectDAO dbMgr;
