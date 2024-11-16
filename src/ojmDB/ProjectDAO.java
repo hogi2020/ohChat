@@ -121,7 +121,6 @@ public class ProjectDAO {
         String[] sqls = {
                 "select count(*) from talk_room where talk_room_name = ?",
                 "insert into talk_room values (talk_room_seq.nextval,?)"};
-
         try {
             conn = dbMgr.getConnection();
 
@@ -280,6 +279,7 @@ public class ProjectDAO {
         return msgList;
     }
 
+
     // NickName을 통해 IP주소 구하기
     public String getIP(String nickName) {
         sql = "select mem_ip from member where mem_nick = ?";
@@ -297,4 +297,5 @@ public class ProjectDAO {
 
         return mem_ip;
     }
+
 }

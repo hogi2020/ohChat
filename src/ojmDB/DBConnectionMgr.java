@@ -3,13 +3,16 @@ package ojmDB;
 import java.sql.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class DBConnectionMgr {
     // Connection Class
     private static DBConnectionMgr dbMgr;
-    private BlockingQueue<Connection> connectionPool;
+    private BlockingQueue<Connection> connPoolQueue;
 
-    // pool 설정
+    // pool 설정 |
+    // 상수이나 인스턴스가 한번만 이루어지므로 Static 굳이 사용하지 않아도 된다.
+    // 다만 확장성과 유지보수를 고려하여 명시적으로 인스턴스가 되지 않도록 Static을 사용합니다.
     private final int INIT_POOL_SIZE = 5;
     private final int MAX_POOL_SIZE = 20;
 
@@ -24,7 +27,7 @@ public class DBConnectionMgr {
     private DBConnectionMgr() {
         try {
             Class.forName(_DRIVER);
-            connectionPool = new LinkedBlockingQueue<>(MAX_POOL_SIZE);
+            connPoolQueue = new LinkedBlockingQueue<>(MAX_POOL_SIZE);
         } catch (ClassNotFoundException e) {
             System.out.println("JDBC 드라이버 로드 실패" + e.getMessage());
         }
@@ -44,29 +47,41 @@ public class DBConnectionMgr {
     // Pool 초기화 선언
     private void initializeConnPool() throws SQLException {
         for (int i = 0; i < INIT_POOL_SIZE; i++) {
-            connectionPool.offer(createNewConn());
+            connPoolQueue.offer(createNewConn());
         }
     }
 
 
     // DBConnection 타입의 변수를 선언
     // DBConnection 클래스에 대한 싱글톤 패턴 구현
+    /// null 이라면 DBConnectionMgr 클래스의 인스턴스 생성
+    /// 다만 초기 2개의 Thread가 동시에 호출될 경우 모두 null인 상태이므로 2번 호출 가능
+    /// 해당 메서드가 동시에 실행되는 것을 방지하기 위해 메소드 "synchronized"를 사용
+    /// 하지만 getInstance가 호출될때마다 쓰레드가 동기화 블록을 통과해야 하므로 성능이 좋지않음
+    /// 그래서 인스턴스가 생기면 동기화 블록을 건너뛰도록 "더블체크 락킹" 구현
     public static DBConnectionMgr getInstance() {
-        // if문의 조건절에서 null 체크함.
-        if(dbMgr == null) { dbMgr = new DBConnectionMgr(); }
+        if(dbMgr == null) {
+            synchronized (DBConnectionMgr.class){
+                if(dbMgr == null) {
+                    dbMgr = new DBConnectionMgr();
+                }
+            }
+        }
         return dbMgr;
     }
 
 
     // Database 연동 메서드 생성
+    /// 모든 자원이 사용되어 반환되지 않을 수 있으므로 타임아웃을 추가
+    /// 대기시간을 발생시켜 유연한 자원 관리가 가능하도록 함.
     public Connection getConnection() {
         try {
-            Connection conn = connectionPool.poll();
+            Connection conn = connPoolQueue.poll(1000, TimeUnit.MILLISECONDS);
             if (conn == null || conn.isClosed()) {
-                if (connectionPool.size() < MAX_POOL_SIZE) {
+                if (connPoolQueue.size() < MAX_POOL_SIZE) {
                     conn = createNewConn();
                 }  else {
-                    conn = connectionPool.take(); // 대기
+                    conn = connPoolQueue.take(); // 대기
                 }
             }
             return conn;
@@ -79,8 +94,8 @@ public class DBConnectionMgr {
 
     private void releaseConn(Connection conn) {
         try {
-            if (!conn.isClosed() && connectionPool.size() < MAX_POOL_SIZE) {
-                connectionPool.offer(conn);
+            if (!conn.isClosed() && connPoolQueue.size() < MAX_POOL_SIZE) {
+                connPoolQueue.offer(conn);
             }
         } catch (SQLException e) {
             System.out.println("커넥션 반환 중 오류 발생 | " + e.getMessage());

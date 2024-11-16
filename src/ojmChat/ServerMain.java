@@ -10,7 +10,7 @@ public class ServerMain {
     // 선언부 |
     Socket clientSocket;
     ServerDataMng sdm;
-    ProjectDAO dbMgr;
+    ProjectDAO pDAO;
 
 
     // 서버 실행 및 클라이언트 접속
@@ -20,8 +20,8 @@ public class ServerMain {
             System.out.println("Ready to Server..... | " + ss);
 
             // 객체 생성
-            dbMgr = new ProjectDAO();   // DBManager 초기화 및 연결 객체 생성
-            sdm = new ServerDataMng(dbMgr);  // 채팅데이터 관리를 위한 Map 객체 생성
+            pDAO = new ProjectDAO();   // DBManager 초기화 및 연결 객체 생성
+            sdm = new ServerDataMng(pDAO);  // 채팅데이터 관리를 위한 Map 객체 생성
 
             // 클라이언트 접속 및 스레드 생성
             while(true) {
@@ -30,7 +30,7 @@ public class ServerMain {
                 System.out.println("클라이언트 접속 | " + clientSocket.getInetAddress());
 
                 // ServerThread 클래스의 run()스레드 생성
-                new Thread(new ServerThread(clientSocket, sdm, dbMgr)).start();
+                new Thread(new ServerThread(clientSocket, sdm)).start();
             }
         } catch (IOException e) {
             System.out.println("서버 작동 중 오류 발생: " + e.getMessage());

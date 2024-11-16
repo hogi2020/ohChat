@@ -115,7 +115,7 @@ public class ClientUI extends JFrame implements ActionListener {
     public void displayCUI(String content) {
         if (content.equals("1")) {
             setVisible(true);
-            setTitle("Client NickName : " +clogin.txt_f_id.getText());
+            setTitle("Client NickName : " + clogin.txt_f_id.getText());
             clogin.dispose();
         } else {
             JOptionPane.showMessageDialog(clogin, "결과["+content+"] 일치하는 회원정보가 없습니다.");
