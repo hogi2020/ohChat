@@ -171,7 +171,7 @@ public class ProjectDAO {
 
 
     // 클라이언트 그룹창 입장
-    public void joinGroup(String mem_nick, String group_name) {
+    public void joinGroup(String nickName, String roomName) {
         sql = "insert into room_member values (" +
                 "(select mem_ip from member where mem_nick = ?), " +
                 "(select talk_room_id from talk_room where talk_room_name = ?))";
@@ -181,8 +181,8 @@ public class ProjectDAO {
             pstmt = conn.prepareStatement(sql);
 
             // DB 내 데이터 저장
-            pstmt.setString(1, mem_nick);
-            pstmt.setString(2, group_name);
+            pstmt.setString(1, nickName);
+            pstmt.setString(2, roomName);
             tfNum = pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -297,5 +297,4 @@ public class ProjectDAO {
 
         return mem_ip;
     }
-
 }
