@@ -1,0 +1,106 @@
+@startuml
+class ojmChat.ServerDataMng {
+~ MemberDAO_Im memDaoIm
+~ MessageDAO_Im msgDaoIm
+~ ChatRoomDAO_Im chatRoomDaoIm
+~ ConcurrentHashMap<String,List<ObjectOutputStream>> roomMsgMap
+~ ConcurrentHashMap<String,ObjectOutputStream> clientInfoMap
++ <<Create>> ServerDataMng()
++ int loginCheck(String,String,ObjectOutputStream)
++ String getIP(String)
++ int createRoom(String,String,String,String)
++ void broadcastRoomList(String)
++ void enterRoom(String,String)
++ void saveMsg(String,String,String)
++ void broadcastMsg(String,String)
++ int crudSQL(String,String,String,String)
+}
+
+
+interface ojmDB.ChatRoomDAO {
+~ int insertRoom(String)
+~ void enterRoom(String,String)
+~ Map<String,String> getRoomMap()
+}
+
+class ojmDB.MessageDAO_Im {
+- DBConnectionMgr dbMgr
+- Connection conn
+- PreparedStatement pstmt
+- ResultSet rs
++ <<Create>> MessageDAO_Im()
++ void insertMsg(String,String,String)
++ List<String> getMsgList(String)
+}
+
+
+class ojmDB.MemberDAO_Im {
+- DBConnectionMgr dbMgr
+- Connection conn
+- PreparedStatement pstmt
+- CallableStatement cstmt
+- ResultSet rs
++ <<Create>> MemberDAO_Im()
++ void insertMem(String,String,String)
++ void updateMem(String,String,String)
++ void deleteMem(String,String)
++ int loginCheck(String,int)
++ Map<String,String> getAllMem()
++ List<String> getJoinMemList(String)
++ String getMemIP(String)
+}
+
+
+class ojmDB.DBConnectionMgr {
+- {static} DBConnectionMgr dbMgr
+- BlockingQueue<Connection> connPoolQueue
+- int INIT_POOL_SIZE
+- int MAX_POOL_SIZE
++ String _DRIVER
++ String _URL
++ String _USER
++ String _PW
+~ <<Create>> DBConnectionMgr()
+- Connection createNewConn()
+- void initializeConnPool()
++ {static} DBConnectionMgr getInstance()
++ Connection getConnection()
+- void releaseConn(Connection)
++ void freeConnection(Connection,PreparedStatement,ResultSet)
++ void freeConnection(Connection,PreparedStatement)
+}
+
+
+interface ojmDB.MessageDAO {
+~ void insertMsg(String,String,String)
+~ List<String> getMsgList(String)
+}
+
+class ojmDB.ChatRoomDAO_Im {
+- DBConnectionMgr dbMgr
+- Connection conn
+- PreparedStatement pstmt
+- ResultSet rs
++ <<Create>> ChatRoomDAO_Im()
++ int insertRoom(String)
++ void enterRoom(String,String)
++ Map<String,String> getRoomMap()
+}
+
+
+interface ojmDB.MemberDAO {
+~ void insertMem(String,String,String)
+~ void updateMem(String,String,String)
+~ void deleteMem(String,String)
+~ int loginCheck(String,int)
+~ String getMemIP(String)
+~ Map<String,String> getAllMem()
+~ List<String> getJoinMemList(String)
+}
+
+
+
+ojmDB.MessageDAO <|.. ojmDB.MessageDAO_Im
+ojmDB.MemberDAO <|.. ojmDB.MemberDAO_Im
+ojmDB.ChatRoomDAO <|.. ojmDB.ChatRoomDAO_Im
+@enduml

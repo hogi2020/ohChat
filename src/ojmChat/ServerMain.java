@@ -1,7 +1,5 @@
 package ojmChat;
 
-import ojmDB.ProjectDAO;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,18 +8,16 @@ public class ServerMain {
     // 선언부 |
     Socket clientSocket;
     ServerDataMng sdm;
-    ProjectDAO pDAO;
 
 
     // 서버 실행 및 클라이언트 접속
     public void ServerStart() {
+        // 객체 생성
+        sdm = new ServerDataMng();
+
         // 서버 실행
         try(ServerSocket ss = new ServerSocket(3000)) {
             System.out.println("Ready to Server..... | " + ss);
-
-            // 객체 생성
-            pDAO = new ProjectDAO();   // DBManager 초기화 및 연결 객체 생성
-            sdm = new ServerDataMng(pDAO);  // 채팅데이터 관리를 위한 Map 객체 생성
 
             // 클라이언트 접속 및 스레드 생성
             while(true) {

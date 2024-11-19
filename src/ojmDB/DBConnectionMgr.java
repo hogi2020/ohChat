@@ -24,7 +24,7 @@ public class DBConnectionMgr {
 
 
     // 생성자 설정
-    private DBConnectionMgr() {
+    DBConnectionMgr() {
         try {
             Class.forName(_DRIVER);
             connPoolQueue = new LinkedBlockingQueue<>(MAX_POOL_SIZE);

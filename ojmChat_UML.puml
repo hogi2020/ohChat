@@ -8,6 +8,7 @@ class ojmChat.ClientLoginUI {
 ~ JPasswordField txt_f_pw
 ~ JButton btn_login
 ~ JButton btn_join
++ <<Create>> ClientLoginUI()
 + void inDisplay()
 + void actionPerformed(ActionEvent)
 + {static} void main(String[])
@@ -15,42 +16,18 @@ class ojmChat.ClientLoginUI {
 
 
 class ojmChat.ServerThread {
+~ String mem_ip
+~ String roomName
+~ String nickName
+~ String createMsg
+~ String[] strings
+~ int loginTF
 ~ Socket clientSocket
 ~ ObjectOutputStream outStream
 ~ ObjectInputStream inStream
 ~ ServerDataMng sdm
-~ ProjectDAO dbMgr
-~ String mem_ip
-~ String roomName
-~ String nickName
-~ String[] strings
-~ int loginTF
++ <<Create>> ServerThread(Socket,ServerDataMng)
 + void run()
-}
-
-
-class ojmDB.ProjectDAO {
-~ DBConnectionMgr dbMgr
-~ Connection conn
-~ PreparedStatement pstmt
-~ CallableStatement cstmt
-~ ResultSet rs
-~ String sql
-~ String mem_ip
-~ int tfNum
-+ void insertMem(String,String,String)
-+ void deleteMem(String,String)
-+ void updateMem(String,String,String)
-+ int result()
-+ int loginCheck(String,int)
-+ int insertGroup(String)
-+ void insertMsg(String,String,String)
-+ void joinGroup(String,String)
-+ ConcurrentHashMap<String,String> getRoomMap()
-+ ConcurrentHashMap<String,String> getMemMap()
-+ CopyOnWriteArrayList<String> getJoinMemList(String)
-+ CopyOnWriteArrayList<String> getMsgList(String)
-+ String getIP(String)
 }
 
 
@@ -60,6 +37,7 @@ class ojmChat.ClientProtocol {
 - ObjectOutputStream out
 ~ String msg
 ~ ClientUI cui
++ <<Create>> ClientProtocol(ClientUI)
 + void connectToServer()
 + void run()
 + void sendMsg(String)
@@ -69,7 +47,6 @@ class ojmChat.ClientProtocol {
 class ojmChat.ServerMain {
 ~ Socket clientSocket
 ~ ServerDataMng sdm
-~ ProjectDAO dbMgr
 + void ServerStart()
 + {static} void main(String[])
 }
@@ -86,35 +63,27 @@ class ojmChat.ClientJoinUI {
 ~ JButton btn_re_join
 ~ JButton btn_upd_nick
 ~ JButton btn_del_nick
++ <<Create>> ClientJoinUI(ClientUI)
 + void inDisplay()
 + void actionPerformed(ActionEvent)
 }
 
 
 class ojmChat.ServerDataMng {
-~ ProjectDAO dbMgr
-~ ConcurrentHashMap<String,CopyOnWriteArrayList<ObjectOutputStream>> roomMsgMap
+~ MemberDAO_Im memDaoIm
+~ MessageDAO_Im msgDaoIm
+~ ChatRoomDAO_Im chatRoomDaoIm
+~ ConcurrentHashMap<String,List<ObjectOutputStream>> roomMsgMap
 ~ ConcurrentHashMap<String,ObjectOutputStream> clientInfoMap
-~ ConcurrentHashMap<String,String> roomMap
-+ void broadcastRoomList()
++ <<Create>> ServerDataMng()
++ int loginCheck(String,String,ObjectOutputStream)
++ String getIP(String)
++ int createRoom(String,String,String,String)
++ void broadcastRoomList(String)
 + void enterRoom(String,String)
-+ void broadcastMsg(String,String,String)
-}
-
-
-class ojmDB.DBConnectionMgr {
-+ String _DRIVER
-+ String _URL
-+ String _USER
-+ String _PW
-~ {static} DBConnectionMgr dbMgr
-~ Connection conn
-~ PreparedStatement pstmt
-~ ResultSet rs
-+ {static} DBConnectionMgr getInstance()
-+ Connection getConnection()
-+ void freeConnection(Connection,PreparedStatement,ResultSet)
-+ void freeConnection(Connection,PreparedStatement)
++ void saveMsg(String,String,String)
++ void broadcastMsg(String,String)
++ int crudSQL(String,String,String,String)
 }
 
 
@@ -133,6 +102,8 @@ class ojmChat.ClientUI {
 ~ JPanel pnl_btn
 ~ JButton btn_create
 ~ JButton btn_join
++ <<Create>> ClientUI()
++ <<Create>> ClientUI(ClientLoginUI)
 + void inDisplay()
 + void actionPerformed(ActionEvent)
 + void displayMsg(String)
