@@ -129,4 +129,15 @@ CREATE TABLE message (...)
 </br>
 
 ## UML Image
+1. UML - UI
+![diagram-7925537821832876082](https://github.com/user-attachments/assets/20878620-5f41-498a-93c1-42f3bb311bd8)
 
+</br>
+
+2. UML - Server
+![diagram-16064443929942325044](https://github.com/user-attachments/assets/db1b055a-928c-447a-99c0-000caf44601c)
+
+</br>
+
+3. UML - DB(DAO & Connection Pool)
+![diagram-4034558985399949628](https://github.com/user-attachments/assets/13439576-8d24-40c4-93eb-db7876992315)
