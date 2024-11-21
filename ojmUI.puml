@@ -1,0 +1,82 @@
+@startuml
+class ojmChat.ClientLoginUI {
+~ ClientUI cui
+~ ClientJoinUI cjoin
+~ JLabel label_id
+~ JLabel label_pw
+~ JTextField txt_f_id
+~ JPasswordField txt_f_pw
+~ JButton btn_login
+~ JButton btn_join
++ <<Create>> ClientLoginUI()
++ void inDisplay()
++ void actionPerformed(ActionEvent)
++ {static} void main(String[])
+}
+
+
+class ojmChat.ClientProtocol {
+- Socket clientSocket
+- ObjectInputStream in
+- ObjectOutputStream out
+~ String msg
+~ ClientUI cui
++ <<Create>> ClientProtocol(ClientUI)
++ void connectToServer()
++ void run()
++ void sendMsg(String)
+}
+
+
+class ojmChat.ClientJoinUI {
+~ ClientProtocol cp
+~ JLabel label_id
+~ JLabel label_pw
+~ JLabel label_pw_ch
+~ JTextField txt_f_id
+~ JPasswordField txt_f_pw
+~ JPasswordField txt_f_pw_ch
+~ JButton btn_re_join
+~ JButton btn_upd_nick
+~ JButton btn_del_nick
++ <<Create>> ClientJoinUI(ClientUI)
++ void inDisplay()
++ void actionPerformed(ActionEvent)
+}
+
+
+class ojmChat.ClientUI {
+~ ClientProtocol cp
+~ ClientLoginUI clogin
+~ JPanel pnl_main
+~ JPanel pnl_chat
+~ JPanel pnl_room
+~ DefaultListModel<String> listModel_room
+~ JList<String> list_room
+~ JScrollPane scroll_list
+~ JTextField txt_field
+~ JTextArea txt_area
+~ JScrollPane scroll_area
+~ JPanel pnl_btn
+~ JButton btn_create
+~ JButton btn_join
++ <<Create>> ClientUI()
++ <<Create>> ClientUI(ClientLoginUI)
++ void inDisplay()
++ void actionPerformed(ActionEvent)
++ void displayMsg(String)
++ void updateRoomList(String[])
++ void displayCUI(String)
+}
+
+
+
+
+java.awt.event.ActionListener <|.. ojmChat.ClientLoginUI
+ojmChat.JFrame <|-- ojmChat.ClientLoginUI
+ojmChat.Runnable <|.. ojmChat.ClientProtocol
+java.awt.event.ActionListener <|.. ojmChat.ClientJoinUI
+ojmChat.JFrame <|-- ojmChat.ClientJoinUI
+java.awt.event.ActionListener <|.. ojmChat.ClientUI
+ojmChat.JFrame <|-- ojmChat.ClientUI
+@enduml
