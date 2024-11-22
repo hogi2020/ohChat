@@ -5,7 +5,7 @@
 OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니다.
 소켓 통신과 멀티스레드를 활용하여 다수의 사용자가 동시에 채팅방을 생성하고 대화할 수 있습니다.
 
-</br>
+<br>
 
 ## 🛠 주요 기능
 **1. 회원 관리**
@@ -14,7 +14,7 @@ OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니
 - 회원 탈퇴
 - IP 기반 중복 가입 방지
 
-</br>
+<br>
 
 **2. 채팅방 관리**
 - 실시간 채팅방 생성
@@ -22,7 +22,7 @@ OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니
 - 실시간 메시지 송수신
 - 채팅방 목록 실시간 업데이트
 
-</br>
+<br>
 
 ## 🏗 시스템 아키텍처
 **클라이언트 (ojmChat)**
@@ -31,14 +31,14 @@ OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니
 - ClientJoinUI: 회원가입 화면
 - ClientProtocol: 서버와의 통신 처리
 
-</br>
+<br>
 
 **서버 (ojmChat)**
 - ServerMain: 서버 시작 및 클라이언트 연결 관리
 - ServerThread: 클라이언트별 요청 처리
 - ServerDataMng: 데이터 및 비즈니스 로직 관리
 
-</br>
+<br>
 
 **데이터베이스 (ojmDB)**
 - DBConnectionMgr: 커넥션 풀 관리
@@ -46,7 +46,7 @@ OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니
 - ChatRoomDAO: 채팅방 정보 관리
 - MessageDAO: 채팅 메시지 관리
 
-</br>
+<br>
 
 ## 💻 기술 스택
 - 언어: Java
@@ -55,7 +55,7 @@ OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니
 - 통신: Socket, ObjectStream
 - 동시성 처리: Thread, ConcurrentHashMap
 
-</br>
+<br>
 
 ## 🔍 주요 특징
 - 커넥션 풀링(Connection pooling)
@@ -68,7 +68,7 @@ OhChat!은 Java Swing을 활용한 실시간 멀티룸 채팅 프로그램입니
 - 채팅방 목록 실시간 동기화
 - 메시지 즉시 전달 시스템
 
-</br>
+<br>
 
 ## 🚀 시작하기
 **1. Oracle 데이터베이스 설정**
@@ -85,7 +85,7 @@ CREATE TABLE message (...)
 **3. 클라이언트 실행 (Main)**
 > ClientLoginUI.java
 
-</br>
+<br>
 
 ## 📋 프로젝트 구조
 ```
@@ -99,14 +99,14 @@ CREATE TABLE message (...)
      └── *DAO_Im.java   # 데이터 접근 구현체
 ```
 
-</br>
+<br>
 
 ## 🔒 보안 기능
 - 비밀번호 검증 시스템
 - IP 기반 중복 가입 방지
 - 세션 관리를 통한 접근 제어
 
-</br>
+<br>
 
 ## 🔄 프로토콜
 - MsgSend: 메시지 전송
@@ -117,7 +117,7 @@ CREATE TABLE message (...)
 - Delete: 회원 탈퇴
 - LoginCheck: 로그인 검증
 
-</br>
+<br>
 
 ## 📝 향후 개선 사항
 - 메시지 암호화 도입
@@ -126,18 +126,19 @@ CREATE TABLE message (...)
 - 채팅방 권한 관리 시스템
 - UI/UX 개선
 
-</br>
+<br>
 
 ## UML Image
+
 **1. UML - UI** </br>
 ![diagram-7925537821832876082](https://github.com/user-attachments/assets/20878620-5f41-498a-93c1-42f3bb311bd8)
 
-</br>
+<br>
 
 **2. UML - Server** </br>
 ![diagram-16064443929942325044](https://github.com/user-attachments/assets/db1b055a-928c-447a-99c0-000caf44601c)
 
-</br>
+<br>
 
 **3. UML - DB(DAO & Connection Pool)** </br>
 ![diagram-4034558985399949628](https://github.com/user-attachments/assets/13439576-8d24-40c4-93eb-db7876992315)
